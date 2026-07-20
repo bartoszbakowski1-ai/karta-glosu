@@ -1,6 +1,6 @@
 # Karta głosu: [Twoje imię]
 
-*Zbudowana: [data]. Źródło: [ile nagrań / transkrypcji / jakie]. Analizowane wyłącznie moje wypowiedzi.*
+*Zbudowana: [data]. Status: [startowa / pełna]. Źródło: [ile nagrań / transkrypcji / jakie]. Analizowane wyłącznie moje wypowiedzi.*
 
 > Ta karta nie opisuje, jak chcę brzmieć. Ona dokumentuje, jak realnie mówię.
 > Wszystko poniżej to cytaty z materiału, nie deklaracje.
