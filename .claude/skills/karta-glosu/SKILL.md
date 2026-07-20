@@ -1,6 +1,6 @@
 ---
 name: karta-glosu
-description: Buduje kartę głosu (tone of voice) użytkownika z jego własnego materiału - nagrań, transkrypcji rozmów, contentu albo maili. Jeśli materiału nie ma, przeprowadza wywiad i buduje kartę z odpowiedzi. Efekt to plik karta-glosu.md, który leży w projekcie i sprawia, że AI pisze tonem użytkownika zamiast medianą internetu. Wywołaj, gdy użytkownik mówi "karta głosu", "tone of voice", "chcę żeby AI pisało jak ja", "moje teksty brzmią jak AI", "/karta-glosu", albo gdy prosi o tekst i widać, że nie ma w projekcie pliku z jego głosem.
+description: Buduje kartę głosu (tone of voice) użytkownika z jego własnego materiału - transkrypcji nagrań i rozmów, contentu albo maili. Sprawdza, czy dostępne narzędzia potrafią przetworzyć wskazane audio, a jeśli nie, jasno prosi o transkrypcję. Bez materiału prowadzi szybki albo pełny wywiad. Efekt to plik karta-glosu.md, który pomaga AI pisać tonem użytkownika zamiast medianą internetu. Wywołaj, gdy użytkownik mówi "karta głosu", "tone of voice", "chcę żeby AI pisało jak ja", "moje teksty brzmią jak AI", "/karta-glosu", albo gdy prosi o tekst i widać, że nie ma w projekcie pliku z jego głosem.
 ---
 
 # Karta głosu
@@ -26,11 +26,42 @@ Twoja rola: wydobyć te dowody i zapisać je w pliku, którego użytkownik będz
 
 ---
 
+## Samodiagnoza środowiska
+
+1. Zanim obiecasz analizę pliku, sprawdź, czy istnieje, czy masz do niego dostęp i czy potrafisz odczytać jego format.
+2. Nie udawaj, że przeanalizowałeś audio, jeśli nie masz transkrypcji ani działającego narzędzia do transkrypcji.
+3. Jeśli brakuje narzędzia, uprawnienia albo pliku, powiedz jednym zdaniem, czego brakuje. Następnie zaproponuj najkrótszy kolejny krok.
+4. Nie instaluj dodatkowych narzędzi i nie podłączaj kont bez zgody użytkownika.
+5. Gdy problem dotyczy wykrywania skilla, sprawdź ścieżkę `.claude/skills/karta-glosu/SKILL.md`. Jeśli nowy katalog skills wymaga ponownego uruchomienia Claude Code, powiedz to wprost.
+
+---
+
+## Krok 0: zapisz uczciwy punkt odniesienia
+
+Zanim przeczytasz materiały, istniejącą kartę albo przeprowadzisz wywiad, zaproponuj test przed i po. Zadaj jedno pytanie:
+
+> Zanim poznam Twój głos, przygotujmy uczciwy tekst bazowy. Podaj temat i format, na przykład: post o delegowaniu zadań. Jeśli nie chcesz robić porównania, napisz „pomijam test”.
+
+Jeśli użytkownik poda temat:
+
+1. Zapisz dokładne polecenie testowe.
+2. Nie czytaj jeszcze żadnej karty ani materiałów o głosie.
+3. Wygeneruj krótki tekst bazowy zwykłym, generycznym sposobem.
+4. Zachowaj polecenie i tekst w rozmowie do końcowego porównania.
+
+Nie twórz tekstu bazowego po wywiadzie. Wtedy znałbyś już sposób mówienia użytkownika i porównanie byłoby zafałszowane.
+
+---
+
 ## Krok 1: sprawdź, co użytkownik ma
 
 Zacznij od jednego pytania, nie od listy:
 
 > Zanim zaczniemy: masz gdzieś nagrania albo transkrypcje, w których mówisz o swojej pracy? Nagrania głosowe, zapisy spotkań, live'y, cokolwiek. Jeśli nie, zbudujemy kartę z wywiadu i to też zadziała.
+
+Dodaj krótkie przypomnienie:
+
+> Jeśli materiał zawiera klientów albo inne osoby, usuń dane osobowe i poufne informacje. Będę analizować i cytować wyłącznie Twoje wypowiedzi.
 
 Cztery miejsca, o których warto przypomnieć, jeśli użytkownik mówi "chyba nic nie mam":
 
@@ -47,17 +78,27 @@ Dalej idziesz jedną z dwóch ścieżek.
 
 **1. Zbierz pliki.** Poproś o wskazanie ścieżek albo wklejenie treści. Przy transkrypcjach z rozmów wielu osób **analizuj wyłącznie wypowiedzi użytkownika**, resztę pomijasz. Powiedz mu, że tak robisz.
 
+Jeśli użytkownik wskazuje plik audio:
+
+1. Sprawdź format i dostępne możliwości transkrypcji.
+2. Jeśli potrafisz bezpiecznie przygotować transkrypcję dostępnym narzędziem, opisz krótko plan i poproś o zgodę przed wysłaniem audio do zewnętrznej usługi.
+3. Jeśli nie masz takiej możliwości, nie brnij dalej. Poproś o transkrypcję albo zaproponuj nagranie odpowiedzi przez dostępną funkcję głosową.
+
 **2. Przeczytaj wszystko, zanim zaczniesz pisać kartę.** Nie streszczaj w locie.
 
 **3. Zliczaj, nie szacuj.** Przy markerach podawaj kolejność według realnej częstotliwości. Jeśli masz dużo materiału, policz wystąpienia (grep, prosty skrypt), zamiast zgadywać.
 
 **4. Wypełnij osiem sekcji** wzorując się na strukturze poniżej.
 
-**5. Pokaż użytkownikowi, co znalazłeś, zanim zapiszesz plik.** Krótko, w punktach. Zapytaj: "rozpoznajesz się w tym?". Ludzie często nie wiedzą, że mówią jakieś słowo, i to jest właśnie ten moment, w którym karta staje się ich.
+**5. Przejdź do wspólnego kroku weryfikacji.** Nie zapisuj karty bez pokazania użytkownikowi najważniejszych obserwacji.
 
 ---
 
 ## Ścieżka B: brak materiału, robisz wywiad
+
+Najpierw zapytaj:
+
+> Wolisz szybką kartę startową z 3 pytań, około 10-15 minut, czy pełną kartę z 7 pytań, około 20-40 minut?
 
 Zadawaj pytania **pojedynczo**, nie hurtem. Po każdej odpowiedzi notuj nie tylko treść, lecz także **jak** została powiedziana: jakie słowa wracają, jak długie są zdania, czy pojawiają się analogie.
 
@@ -73,13 +114,17 @@ Pytania, w tej kolejności:
 6. Masz jakieś swoje określenia, których używasz na to, co robisz? Rzeczy, które nazywasz po swojemu?
 7. Kiedy piszesz do klienta, a kiedy do znajomego z branży, co się zmienia w Twoim tonie?
 
-Po siódmym pytaniu zaproponuj: *jeśli chcesz mocniejszą kartę, nagraj teraz pięć minut o tym, co dziś robiłeś, i wklej transkrypcję. Wtedy dołożę do niej Twój prawdziwy rytm mówiony.*
+W trybie szybkim zadaj pytania 1, 3 i 4. Sekcje, których nie da się uczciwie uzupełnić, oznacz `[do uzupełnienia]`. Nazwij wynik „kartą startową”, nie pełną kartą.
+
+W trybie pełnym zadaj wszystkie siedem pytań.
+
+Po ostatnim pytaniu zaproponuj: *jeśli chcesz mocniejszą kartę, nagraj teraz pięć minut o tym, co dziś robiłeś, i wklej transkrypcję. Wtedy dołożę do niej Twój prawdziwy rytm mówiony.*
 
 ---
 
 ## Struktura karty: osiem sekcji
 
-Zapisujesz do `karta-glosu.md` w katalogu głównym projektu.
+Docelowy plik to `karta-glosu.md` w katalogu głównym projektu. Zapisz go dopiero po akceptacji użytkownika w kroku 2.
 
 ### 1. Rdzeń: markery, które są podpisem
 
@@ -134,16 +179,36 @@ Bez tej sekcji AI zwróci transkrypcję udającą tekst. Z nią zwraca tekst, kt
 
 ---
 
+## Krok 2: potwierdź i zapisz
+
+1. Pokaż najważniejsze obserwacje w krótkich punktach, zanim zapiszesz plik.
+2. Zapytaj: „Rozpoznajesz się w tym? Co mam poprawić albo usunąć?”.
+3. Popraw analizę na podstawie odpowiedzi. Nie broń pierwszej wersji.
+4. Po akceptacji zapytaj, czy karta ma pozostać prywatna. Wyjaśnij, że może zawierać cytaty i informacje o klientach.
+5. Jeśli projekt używa Git i karta ma być prywatna, zaproponuj dodanie `karta-glosu.md` oraz `materialy-glosu-prywatne/` do `.gitignore`. Zmień `.gitignore` dopiero po zgodzie.
+6. Zapisz kartę do `karta-glosu.md` w katalogu głównym projektu.
+
+Na początku pliku zapisz:
+
+- datę utworzenia,
+- użyte źródła,
+- informację, że analizowano wyłącznie wypowiedzi użytkownika,
+- status `startowa` albo `pełna`.
+
+---
+
 ## Krok ostatni: test A/B
 
-Po zapisaniu karty **zaproponuj test**, nie kończ na pliku:
+Jeśli w kroku 0 powstał tekst bazowy:
 
-> Zrobimy jedno sprawdzenie. Daj mi temat, o którym mógłbyś napisać post albo maila.
+1. Użyj dokładnie tego samego polecenia testowego.
+2. Napisz nową wersję z kartą, wskazując konkretne sekcje, zwłaszcza destylację.
+3. Połóż tekst bazowy i tekst z kartą obok siebie.
+4. Zapytaj, który tekst bardziej brzmi jak użytkownik i które zdania o tym decydują.
 
-Potem:
-1. Napisz tekst **bez odwoływania się do karty**. Zwykły, generyczny prompt.
-2. Napisz ten sam tekst **z kartą**, wskazując konkretną sekcję, na przykład destylację.
-3. Połóż oba obok siebie i zapytaj, który brzmi jak on.
+Nie generuj teraz nowej wersji „bez karty”. Po wywiadzie znasz już głos użytkownika, więc nie byłby to uczciwy punkt odniesienia.
+
+Jeśli użytkownik pominął krok 0, pokaż tylko tekst z kartą. Powiedz, że do uczciwego porównania potrzebny jest tekst utworzony przed analizą głosu albo w osobnym, czystym kontekście.
 
 Dopóki użytkownik nie zobaczy różnicy obok siebie, nie uwierzy, że to działa.
 
